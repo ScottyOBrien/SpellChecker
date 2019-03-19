@@ -9,6 +9,26 @@ import java.util.*;
  */
 public class SpellChecker {
 
+    public void spellCorrect(String originalWord, int ln){
+        List<String> suggestions = new ArrayList<>();
+        char[] c = originalWord.toCharArray();
+
+        System.out.println("Line " + ln + ": \"" + originalWord + "\" "  + "is not spelled correctly!");
+        System.out.println("Suggestions:");
+
+        
+
+    }
+
+    private String swapChars(int indexOne, int indexTwo, char[] c) {
+        char temp = c[indexOne];
+        c[indexOne] = c[indexTwo];
+        c[indexOne] = temp;
+        String swappedString = new String(c);
+
+        return swappedString;
+    }
+
     static final int SIZE = 26;
 
     public static void main(String[] args) throws FileNotFoundException {
