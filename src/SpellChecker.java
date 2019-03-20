@@ -6,7 +6,7 @@ import java.util.*;
  * @version 3/12/2019
  * This project uses a data structure known as a Trie. It will implement a spell checker and an inner class named
  * Lexicon that is implemented as a Trie.
- * 
+ *
  * KNOWN BUGS: Currently the Trie(lexicon) is not appropriately differentiating between what is an i'snt a word. There
  * probably needs to be some sort of flag added somewhere to be able to recognize whether or not we've found an actual
  * word when reaching the end of a search.
@@ -124,23 +124,28 @@ public class SpellChecker {
     public static void main(String[] args) throws FileNotFoundException {
         // here we init a string list and a new Lexicon to use for our spell checker.
         List<String> stringList = new ArrayList<>();
+        //create our lexicon object that will have all of the words inserted into it.
         final Lexicon lex = new Lexicon();
-
+        // designate data file for dictionary of words.
         File file = new File("C:\\Users\\Kazoo\\Documents\\Homework\\enable1augmented.txt");
 
+        //setup scanner and loop through line by line.
         Scanner input = new Scanner(file);
-
         while (input.hasNextLine()){
             stringList.add(input.nextLine());
         }
         input.close();
 
+        //insert all the values we just collected from our data file (dictionary of words essentially.)
         stringList.forEach(lex::insert);
 
+        //setup and take in test data file name from user
         Scanner scan = new Scanner(System.in);
         System.out.println("Please enter filename with ext. to spellcheck: ");
         File data = new File(scan.nextLine());
         input = new Scanner(data);
+
+        //initialize a few variables to help us process everything
         String nextWord = null;
         int ln = 0;
         while (input.hasNextLine()){
@@ -169,12 +174,12 @@ public class SpellChecker {
          * enable1augmented.txt and build a Trie containing them.
          * containsWord (String word) is a public boolean method which returns true if the word is in the lexicon, false
          * otherwise.
-         * @param LexNode This param contains our root of our Trie. it comes from a static subclass called LexNode
+         * @param root This param contains our root of our Trie. It comes from a static subclass called LexNode
          */
 
         final LexNode root;
 
-
+        // constructor
         public Lexicon (){
             this.root = new LexNode();
         }
