@@ -9,18 +9,25 @@ import java.util.*;
  */
 public class SpellChecker {
 
-    public void spellCorrect(String originalWord, int ln){
+    public static void spellCorrect(String originalWord, int ln, Lexicon lex){
         List<String> suggestions = new ArrayList<>();
         char[] c = originalWord.toCharArray();
 
         System.out.println("Line " + ln + ": \"" + originalWord + "\" "  + "is not spelled correctly!");
         System.out.println("Suggestions:");
 
-        
+        for (int i = 0; i < c.length-1 ; i++) {
+            String corrected = swapChars(i,i+1,c);
+            if (lex.containsWord(corrected) == true){
+                suggestions.add(corrected);
+            }
+        }
 
     }
 
-    private String swapChars(int indexOne, int indexTwo, char[] c) {
+    // method that allows us to swap characters in a string with given index values so we can do any 2 paired index val
+    // ex: i & i+1 where i == 0, indexOne = 0, indexTwo = 1
+    public static String swapChars(int indexOne, int indexTwo, char[] c) {
         char temp = c[indexOne];
         c[indexOne] = c[indexTwo];
         c[indexOne] = temp;
@@ -46,6 +53,28 @@ public class SpellChecker {
         input.close();
 
         stringList.forEach(lex::insert);
+
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Please enter filename with ext. to spellcheck: ");
+        File data = new File(scan.nextLine());
+        input = new Scanner(data);
+        while (input.hasNextLine()){
+            String newWord = null;
+            int ln = 0;
+            String line = input.nextLine();
+            String[] splitIntoWords = line.split("//s");
+            for (int i = 0; i < splitIntoWords.length; i++) {
+                newWord = splitIntoWords[i];
+                if (lex.containsWord(newWord) == false) {
+                    spellCorrect(newWord,ln,lex);
+                }
+            }
+
+
+        }
+
+
+
     }
 
     static class Lexicon {
