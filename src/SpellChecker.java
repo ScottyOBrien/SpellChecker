@@ -6,6 +6,10 @@ import java.util.*;
  * @version 3/12/2019
  * This project uses a data structure known as a Trie. It will implement a spell checker and an inner class named
  * Lexicon that is implemented as a Trie.
+ * 
+ * KNOWN BUGS: Currently the Trie(lexicon) is not appropriately differentiating between what is an i'snt a word. There
+ * probably needs to be some sort of flag added somewhere to be able to recognize whether or not we've found an actual
+ * word when reaching the end of a search.
  */
 public class SpellChecker {
 
@@ -49,9 +53,30 @@ public class SpellChecker {
             }
         }
 
+        // logic for handling fourth technique of replacing a character at a given index with each letter from the
+        // alphabet (a-z). Uses helper method replaceChar().
+        for (int i = 0; i < c.length; i++) {
+            for (int ascii = 97; ascii != 123 ; ascii++) {
+                String corrected = replaceChar(i, originalWord, ascii);
+                if (lex.containsWord(corrected)){
+                    if (!suggestions.contains(corrected))
+                        suggestions.add(corrected);
+                }
+            }
+        }
         //quickly print out our suggestions using our helper printing method before heading back to main().
         print(suggestions);
 
+    }
+
+    //helper method for replacing a char at a given index inside of a string, utilizing string builder once more.
+    public static String replaceChar(int index, String str, int ascii){
+        StringBuilder rep = new StringBuilder(str);
+        char letter = (char) ascii;
+        String sLetter = Character.toString(letter);
+        rep.replace(index,index+1, sLetter);
+        String edited = new String(rep);
+        return edited;
     }
 
     // helper method for deleting a char at a given index. Utilizes StringBuilder once again to remove the char we want.
