@@ -38,8 +38,25 @@ public class SpellChecker {
 
         }
 
-        System.out.println();
+        // logic for handling third technique of deleting a char at a given index. uses helper method deleteChar()
+        for (int i = 0; i < c.length; i++) {
+            String corrected = deleteChar(i, originalWord);
+            if (lex.containsWord(corrected)){
+                suggestions.add(corrected);
+            }
+        }
 
+        //quickly print out our suggestions using our helper printing method before heading back to main().
+        print(suggestions);
+
+    }
+
+    // helper method for deleting a char at a given index. Utilizes StringBuilder once again to remove the char we want.
+    public static String deleteChar(int index, String str){
+        StringBuilder del = new StringBuilder(str);
+        del.deleteCharAt(index);
+        String edited = new String(del);
+        return edited;
     }
 
     // helper method that allows us to insert a letter in between each adjacent pair of chars in the word.
@@ -47,9 +64,9 @@ public class SpellChecker {
         char letter = (char) ascii;
         StringBuilder ins = new StringBuilder(str);
         ins.insert(index+1, letter);
-        String insertedString = new String(ins);
+        String edited = new String(ins);
 
-        return insertedString;
+        return edited;
     }
 
     // helper method that allows us to swap characters in a string with given index values so we can do any 2 paired
@@ -59,9 +76,19 @@ public class SpellChecker {
         char temp = copy[indexOne];
         copy[indexOne] = copy[indexTwo];
         copy[indexTwo] = temp;
-        String swappedString = new String(copy);
+        String edited = new String(copy);
 
-        return swappedString;
+        return edited;
+    }
+
+    // helper method for printing our list of suggestions each time. made it a method so it was easier to modify.
+    private static void print(List<String> str){
+        System.out.print("[");
+        for(String string : str){
+            System.out.print(string + ", ");
+        }
+        System.out.println("]");
+        System.out.println();
     }
 
     static final int SIZE = 26;
