@@ -17,6 +17,8 @@ public class SpellChecker {
         System.out.println("Line " + ln + ": \"" + originalWord + "\" "  + "is not spelled correctly!");
         System.out.println("Suggestions:");
 
+        // This section of code handles the first technique of swapping adjacent characters.
+        // it uses the helper method swapChars to accomplish this.
         for (int i = 0; i < c.length-1 ; i++) {
             String corrected = swapChars(i,i+1,c);
             if (lex.containsWord(corrected) == true){
@@ -24,10 +26,11 @@ public class SpellChecker {
             }
         }
 
-        char[] cCopy = c;
+        // This section of code handles the second technique of inserting all letters a-z in between each adjacent pair
+        // of characters. it uses the helper method insertAthruZ to accomplish this.
         for (int i = 0; i < c.length-1; i++) {
             for (int ascii = 97; ascii != 123 ; ascii++) {
-                String corrected = insertAthruZ(i, cCopy, ascii);
+                String corrected = insertAthruZ(i, originalWord, ascii);
                 if (lex.containsWord(corrected)){
                     suggestions.add(corrected);
                 }
@@ -35,18 +38,22 @@ public class SpellChecker {
 
         }
 
+        System.out.println();
+
     }
 
-    public static String insertAthruZ (int index, char[] c, int ascii){
-            char testChar = (char) ascii;
-            c[index] = testChar;
-            String insertedString = new String(c);
+    // helper method that allows us to insert a letter in between each adjacent pair of chars in the word.
+    public static String insertAthruZ (int index, String str, int ascii){
+        char letter = (char) ascii;
+        StringBuilder ins = new StringBuilder(str);
+        ins.insert(index+1, letter);
+        String insertedString = new String(ins);
 
-            return insertedString;
+        return insertedString;
     }
 
-    // method that allows us to swap characters in a string with given index values so we can do any 2 paired index val
-    // ex: i & i+1 where i == 0, indexOne = 0, indexTwo = 1
+    // helper method that allows us to swap characters in a string with given index values so we can do any 2 paired
+    // index values. ex: i & i+1 where i == 0, indexOne = 0, indexTwo = 1
     public static String swapChars(int indexOne, int indexTwo, char[] c) {
         char[] copy = c.clone();
         char temp = copy[indexOne];
