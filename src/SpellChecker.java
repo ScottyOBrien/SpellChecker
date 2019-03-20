@@ -9,6 +9,7 @@ import java.util.*;
  */
 public class SpellChecker {
 
+    // this method performs all of our suggestion techniques for an individual word
     public static void spellCorrect(String originalWord, int ln, Lexicon lex){
         List<String> suggestions = new ArrayList<>();
         char[] c = originalWord.toCharArray();
@@ -23,15 +24,35 @@ public class SpellChecker {
             }
         }
 
+        char[] cCopy = c;
+        for (int i = 0; i < c.length-1; i++) {
+            for (int ascii = 97; ascii != 123 ; ascii++) {
+                String corrected = insertAthruZ(i, cCopy, ascii);
+                if (lex.containsWord(corrected)){
+                    suggestions.add(corrected);
+                }
+            }
+
+        }
+
+    }
+
+    public static String insertAthruZ (int index, char[] c, int ascii){
+            char testChar = (char) ascii;
+            c[index] = testChar;
+            String insertedString = new String(c);
+
+            return insertedString;
     }
 
     // method that allows us to swap characters in a string with given index values so we can do any 2 paired index val
     // ex: i & i+1 where i == 0, indexOne = 0, indexTwo = 1
     public static String swapChars(int indexOne, int indexTwo, char[] c) {
-        char temp = c[indexOne];
-        c[indexOne] = c[indexTwo];
-        c[indexOne] = temp;
-        String swappedString = new String(c);
+        char[] copy = c.clone();
+        char temp = copy[indexOne];
+        copy[indexOne] = copy[indexTwo];
+        copy[indexTwo] = temp;
+        String swappedString = new String(copy);
 
         return swappedString;
     }
@@ -58,17 +79,20 @@ public class SpellChecker {
         System.out.println("Please enter filename with ext. to spellcheck: ");
         File data = new File(scan.nextLine());
         input = new Scanner(data);
+        String nextWord = null;
+        int ln = 0;
         while (input.hasNextLine()){
-            String newWord = null;
-            int ln = 0;
             String line = input.nextLine();
-            String[] splitIntoWords = line.split("//s");
+            String[] splitIntoWords = line.split(" ");
             for (int i = 0; i < splitIntoWords.length; i++) {
-                newWord = splitIntoWords[i];
-                if (lex.containsWord(newWord) == false) {
-                    spellCorrect(newWord,ln,lex);
+                nextWord = splitIntoWords[i];
+                nextWord.replaceAll("[^a-zA-Z]", "").toLowerCase();
+
+                if (lex.containsWord(nextWord) == false) {
+                    spellCorrect(nextWord,ln,lex);
                 }
             }
+            ln++;
 
 
         }
@@ -100,6 +124,8 @@ public class SpellChecker {
                 if (current==null || current.next(word.charAt(i))==null){
                     return false;
                 }
+                else
+                    current=current.next(word.charAt(i));
             }
             return true;
         }
