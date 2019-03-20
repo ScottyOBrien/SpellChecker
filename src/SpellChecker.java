@@ -21,8 +21,9 @@ public class SpellChecker {
         // it uses the helper method swapChars to accomplish this.
         for (int i = 0; i < c.length-1 ; i++) {
             String corrected = swapChars(i,i+1,c);
-            if (lex.containsWord(corrected) == true){
-                suggestions.add(corrected);
+            if (lex.containsWord(corrected)){
+                if (!suggestions.contains(corrected))
+                    suggestions.add(corrected);
             }
         }
 
@@ -32,7 +33,8 @@ public class SpellChecker {
             for (int ascii = 97; ascii != 123 ; ascii++) {
                 String corrected = insertAthruZ(i, originalWord, ascii);
                 if (lex.containsWord(corrected)){
-                    suggestions.add(corrected);
+                    if (!suggestions.contains(corrected))
+                        suggestions.add(corrected);
                 }
             }
 
@@ -42,7 +44,8 @@ public class SpellChecker {
         for (int i = 0; i < c.length; i++) {
             String corrected = deleteChar(i, originalWord);
             if (lex.containsWord(corrected)){
-                suggestions.add(corrected);
+                if (!suggestions.contains(corrected))
+                    suggestions.add(corrected);
             }
         }
 
@@ -141,10 +144,11 @@ public class SpellChecker {
          * enable1augmented.txt and build a Trie containing them.
          * containsWord (String word) is a public boolean method which returns true if the word is in the lexicon, false
          * otherwise.
-         * @param LexNode This param contains our root of our Trie.
+         * @param LexNode This param contains our root of our Trie. it comes from a static subclass called LexNode
          */
 
         final LexNode root;
+
 
         public Lexicon (){
             this.root = new LexNode();
@@ -161,6 +165,7 @@ public class SpellChecker {
                 else
                     current=current.next(word.charAt(i));
             }
+
             return true;
         }
 
