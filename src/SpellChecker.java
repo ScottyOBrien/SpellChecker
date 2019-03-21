@@ -14,6 +14,7 @@ import java.util.*;
 public class SpellChecker {
 
     // this method performs all of our suggestion techniques for an individual word
+    // also handles all of the printing work using the print helper method.
     public static void spellCorrect(String originalWord, int ln, Lexicon lex){
         List<String> suggestions = new ArrayList<>();
         char[] c = originalWord.toCharArray();
@@ -64,13 +65,42 @@ public class SpellChecker {
                 }
             }
         }
+
+        //handles the logic for splitting at each adjacent pair of characters and testing both new words.
+        // uses helper method splitWord.
+        for (int i = 0; i < c.length - 1; i++) {
+            String edited = splitWord(i, originalWord);
+            String[] splitWords = edited.split(" ");
+            String correctedOne = splitWords[0];
+            String correctedTwo = splitWords[1];
+
+            if (lex.containsWord(correctedOne)){
+                if (!suggestions.contains(correctedOne))
+                    suggestions.add(correctedOne);
+            }
+            if (lex.containsWord(correctedTwo)){
+                if (!suggestions.contains(correctedTwo))
+                    suggestions.add(correctedTwo);
+            }
+
+
+        }
         //quickly print out our suggestions using our helper printing method before heading back to main().
         print(suggestions);
 
     }
 
+    // helper method for splitting, adds a space and we will split into two strings when we go return.
+    private static String splitWord(int index, String str){
+        StringBuilder spl = new StringBuilder(str);
+        spl.insert(index+1, " ");
+        String edited = new String(spl);
+
+        return edited;
+    }
+
     //helper method for replacing a char at a given index inside of a string, utilizing string builder once more.
-    public static String replaceChar(int index, String str, int ascii){
+    private static String replaceChar(int index, String str, int ascii){
         StringBuilder rep = new StringBuilder(str);
         char letter = (char) ascii;
         String sLetter = Character.toString(letter);
@@ -80,7 +110,7 @@ public class SpellChecker {
     }
 
     // helper method for deleting a char at a given index. Utilizes StringBuilder once again to remove the char we want.
-    public static String deleteChar(int index, String str){
+    private static String deleteChar(int index, String str){
         StringBuilder del = new StringBuilder(str);
         del.deleteCharAt(index);
         String edited = new String(del);
@@ -88,7 +118,7 @@ public class SpellChecker {
     }
 
     // helper method that allows us to insert a letter in between each adjacent pair of chars in the word.
-    public static String insertAthruZ (int index, String str, int ascii){
+    private static String insertAthruZ (int index, String str, int ascii){
         char letter = (char) ascii;
         StringBuilder ins = new StringBuilder(str);
         ins.insert(index+1, letter);
@@ -99,7 +129,7 @@ public class SpellChecker {
 
     // helper method that allows us to swap characters in a string with given index values so we can do any 2 paired
     // index values. ex: i & i+1 where i == 0, indexOne = 0, indexTwo = 1
-    public static String swapChars(int indexOne, int indexTwo, char[] c) {
+    private static String swapChars(int indexOne, int indexTwo, char[] c) {
         char[] copy = c.clone();
         char temp = copy[indexOne];
         copy[indexOne] = copy[indexTwo];
@@ -180,13 +210,13 @@ public class SpellChecker {
         final LexNode root;
 
         // constructor
-        public Lexicon (){
+        private Lexicon (){
             this.root = new LexNode();
         }
 
         //public boolean containsWord returns true or false depending on whether or not a word is within the lexicon.
         //we will call this to check our trie if the word we want to spell check is spelt correctly.
-        public boolean containsWord(final String word){
+        private boolean containsWord(final String word){
             LexNode current = root;
             for (int i = 0; i < word.length(); i++) {
                 if (current==null || current.next(word.charAt(i))==null){
@@ -200,7 +230,7 @@ public class SpellChecker {
         }
 
         //void insert is what we use to insert all of our words into the trie, pretty straight forward.
-        public void insert(final String word){
+        private void insert(final String word){
             LexNode current = root;
             for (int i = 0; i < word.length(); i++) {
                 if (current.lexNodes[word.charAt(i) - 'a'] == null) {
